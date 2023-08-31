@@ -1,8 +1,4 @@
-﻿using Maui.Apps.Framework.Exceptions;
-using Maui.Apps.Framework.Extentions;
-using System.Net.Http.Headers;
-using System.Text.Json;
-
+﻿
 namespace Maui.Apps.Framework.Services;
 
 public class RestServiceBase
@@ -42,7 +38,7 @@ public class RestServiceBase
         return JsonSerializer.Deserialize<T>(json);
     }
 
-    private async Task<string> GetJsonAsync(string resource,int cacheDuration=24)
+    private async Task<string> GetJsonAsync(string resource, int cacheDuration = 24)
     {
         var cleanCacheKey = resource.CleanCacheKey();
 
@@ -50,32 +46,32 @@ public class RestServiceBase
         if (_cacheBarrel != null)
         {
             //check if data is in cache
-            var cachedData =  _cacheBarrel.Get<string>(cleanCacheKey);
+            var cachedData = _cacheBarrel.Get<string>(cleanCacheKey);
 
             if (cacheDuration > 0 && cachedData is not null && !_cacheBarrel.IsExpired(cleanCacheKey)) return cachedData;
 
             //check for internet conection and return cached data if possible
-            if (_connectivity.NetworkAccess !=NetworkAccess.Internet)
+            if (_connectivity.NetworkAccess != NetworkAccess.Internet)
             {
-                return cachedData is not null ? cachedData:throw new InternetConnectionException();
+                return cachedData is not null ? cachedData : throw new InternetConnectionException();
             }
         }
 
         //no cache found or cached data was not required or internet connection is also available
-        if(_connectivity.NetworkAccess !=NetworkAccess.Internet)
+        if (_connectivity.NetworkAccess != NetworkAccess.Internet)
             throw new InternetConnectionException();
 
         //Extract response from URI
-        var response=await _httpClient.GetAsync(new Uri(_httpClient.BaseAddress,resource));
+        var response = await _httpClient.GetAsync(new Uri(_httpClient.BaseAddress, resource));
 
         //check for valid response
         response.EnsureSuccessStatusCode();
 
         //read response
-        string json=await response.Content.ReadAsStringAsync();
+        string json = await response.Content.ReadAsStringAsync();
 
         //save to cache if required
-        if(cacheDuration>0 && _cacheBarrel is not null)
+        if (cacheDuration > 0 && _cacheBarrel is not null)
         {
             try
             {
@@ -84,12 +80,45 @@ public class RestServiceBase
             catch (Exception)
             {
 
-                //throw;
+                throw;
             }
 
         }
-    
+
         return json;
 
+    }
+
+    protected async Task<HttpResponseMessage> PostAsync<T>(string uri, T payload)
+    {
+        var dataToPost = JsonSerializer.Serialize(payload);
+        var content = new StringContent(dataToPost, Encoding.UTF8, "application/json");
+
+        var response = await _httpClient.PostAsync(new Uri(_httpClient.BaseAddress, uri), content);
+
+        response.EnsureSuccessStatusCode();
+
+        return response;
+    }
+
+    protected async Task<HttpResponseMessage> PutAsync<T>(string uri, T payload)
+    {
+        var dataToPut = JsonSerializer.Serialize(payload);
+        var content = new StringContent(dataToPut, Encoding.UTF8, "application/json");
+
+        var response = await _httpClient.PutAsync(new Uri(_httpClient.BaseAddress, uri), content);
+
+        response.EnsureSuccessStatusCode();
+
+        return response;
+    }
+
+    protected async Task<HttpResponseMessage> DeleteAsync(string uri)
+    {
+        var response = await _httpClient.DeleteAsync(new Uri(_httpClient.BaseAddress, uri));
+
+        response.EnsureSuccessStatusCode();
+
+        return response;
     }
 }
