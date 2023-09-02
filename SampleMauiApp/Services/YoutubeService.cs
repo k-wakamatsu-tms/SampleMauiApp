@@ -1,4 +1,6 @@
 ﻿
+using System.Net;
+
 namespace SampleMauiApp.Services;
 
 public class YoutubeService : RestServiceBase, IApiService
@@ -10,6 +12,12 @@ public class YoutubeService : RestServiceBase, IApiService
 
     public Task<VideoSearchResult> SearchVideos(string searchQuery, string nextPageToken = "")
     {
-        var resourceUri = "";
+        var resourceUri = $"search?part=snippet&maxResults=10&type=video&key=[API_KEY]&q={WebUtility.UrlEncode(searchQuery)}"
+            +
+            (!string.IsNullOrEmpty(nextPageToken) ? $"&pageToken={nextPageToken}" : "");
+
+        var result = GetAsync<VideoSearchResult>(resourceUri, 4);
+
+        return result;
     }
 }
