@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
+    ios:Page.PrefersHomeIndicatorAutoHidden="True"
+    xmlns:basecontrols="clr-namespace:SampleMauiApp.ViewControls.Common"
+    x:Class="SampleMauiApp.Views.Base.PageBase"
+    BackgroundColor="{StaticResource PageBackgroundColor}"
+    Title="PageBase1">
+
+    <Grid
+        IgnoreSafeArea="True">
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="{OnPlatform Android=16,iOS=36,Default=0}" />
+            <RowDefinition
+                Height="Auto" />
+            <RowDefinition
+                Height="*" />
+        </Grid.RowDefinitions>
+        <basecontrols:ErrorIndicator
+            Grid.Row="2"
+            IsError="{Binding IsErrorState,Mode=OneWay}"
+            ErrorImage="{Binding ErrorImage,Mode=OneWay}"
+            VerticalOptions="Center"
+            HorizontalOptions="Center" />
+
+        <Grid
+            x:Name="PageContentGrid"
+            IgnoreSafeArea="True"></Grid>
+
+
+    </Grid>
+</ContentPage>

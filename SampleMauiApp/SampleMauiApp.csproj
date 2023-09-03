@@ -49,6 +49,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Fonts\FiraSans-Light.ttf" />
+	  <None Remove="Resources\Fonts\FiraSans-Medium.ttf" />
+	  <None Remove="Resources\Fonts\FiraSans-Regular.ttf" />
 	  <None Remove="Resources\Images\error.png" />
 	  <None Remove="Resources\Images\icnback.png" />
 	  <None Remove="Resources\Images\icnclose.png" />
@@ -71,10 +74,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="ViewModels\Base\" />
 	  <Folder Include="IViews\" />
-	  <Folder Include="ViewControls\" />
-	  <Folder Include="Views\Base\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -82,6 +82,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\Base\PageBase.xaml.cs">
+	    <DependentUpon>PageBase.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="ViewControls\Common\LoadingIndicator.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\Base\PageBase.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\StartPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

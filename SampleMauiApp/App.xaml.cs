@@ -14,10 +14,10 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        //Enable Version Tracking
+        //バージョン追跡を有効にする
         VersionTracking.Track();
 
-        //Set App size on MS Windows
+        //MS Windowsでアプリのサイズを設定する
         Microsoft.Maui.Handlers.WindowHandler.Mapper.AppendToMapping(nameof(IWindow), (handler, view) =>
         {
 #if WINDOWS
@@ -31,6 +31,7 @@ appWindow.Resize(new SizeInt32(WindowWidth,WindowHeight));
 #endif
         });
 
+        //ルートページを設定する
         MainPage = new NavigationPage(new StartPage());
     }
 }
